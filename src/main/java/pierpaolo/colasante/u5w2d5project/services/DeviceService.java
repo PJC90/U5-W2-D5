@@ -22,6 +22,12 @@ public class DeviceService {
     public List<Device> getDevice(){return this.deviceDAO.findAll();}
     public Device save(DeviceDTO body){
         User user = userService.findById(body.userId());
+        String statusTypeValue = body.statusType();
+        try {
+            DeviceStatusType statusType = DeviceStatusType.valueOf(statusTypeValue);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Attenzione!!! " + statusTypeValue + " non è un valore accettabile. I Valori accettabili sono: ASSEGNATO, DISMESSO, DISPONIBILE o MANUTENZIONE");
+        }
         Device newDevice = new Device();
         newDevice.setTypologies(body.typologies());
         newDevice.setStatusType(DeviceStatusType.valueOf(body.statusType()));
