@@ -1,17 +1,23 @@
 package pierpaolo.colasante.u5w2d5project.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import pierpaolo.colasante.u5w2d5project.entities.User;
 import pierpaolo.colasante.u5w2d5project.exceptions.BadRequestException;
 import pierpaolo.colasante.u5w2d5project.exceptions.NotFoundException;
 import pierpaolo.colasante.u5w2d5project.payloads.UserDTO;
 import pierpaolo.colasante.u5w2d5project.repositories.UserDAO;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
 public class UserService {
+    @Autowired
+    private Cloudinary cloudinary;
     @Autowired
     private UserDAO userDAO;
     public List<User> getUser(){return this.userDAO.findAll();}
@@ -41,5 +47,13 @@ public class UserService {
     public void findByIdAndDelete(int id){
         User found = this.findById(id);
         userDAO.delete(found);
+    }
+    public User uploadPicture(int id, MultipartFile file) throws IOException {
+        User found = this.findById(id);
+        String url = (String) cloudinary.uploader()
+                .upload(file.getBytes(), ObjectUtils.emptyMap())
+                .get("url");
+        found.setAvatar(url);
+        return userDAO.save(found);
     }
 }
