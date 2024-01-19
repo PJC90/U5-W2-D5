@@ -3,6 +3,7 @@ package pierpaolo.colasante.u5w2d5project.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pierpaolo.colasante.u5w2d5project.entities.User;
+import pierpaolo.colasante.u5w2d5project.exceptions.BadRequestException;
 import pierpaolo.colasante.u5w2d5project.exceptions.NotFoundException;
 import pierpaolo.colasante.u5w2d5project.payloads.UserDTO;
 import pierpaolo.colasante.u5w2d5project.repositories.UserDAO;
@@ -15,6 +16,8 @@ public class UserService {
     private UserDAO userDAO;
     public List<User> getUser(){return this.userDAO.findAll();}
     public User save(UserDTO body){
+        userDAO.findByEmail(body.email()).ifPresent(user -> {throw new BadRequestException("email " + user.getEmail() + " già usata!!!");});
+        userDAO.findByUsername(body.username()).ifPresent(user -> {throw new BadRequestException("username " + user.getUsername() + " già in uso!!!");});
         User newUser = new User();
         newUser.setName(body.name());
         newUser.setLastName(body.lastName());

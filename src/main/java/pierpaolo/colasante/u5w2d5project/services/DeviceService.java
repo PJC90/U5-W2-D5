@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pierpaolo.colasante.u5w2d5project.entities.Device;
 import pierpaolo.colasante.u5w2d5project.entities.DeviceStatusType;
 import pierpaolo.colasante.u5w2d5project.entities.User;
+import pierpaolo.colasante.u5w2d5project.exceptions.BadRequestException;
 import pierpaolo.colasante.u5w2d5project.exceptions.NotFoundException;
 import pierpaolo.colasante.u5w2d5project.payloads.DeviceDTO;
 import pierpaolo.colasante.u5w2d5project.repositories.DeviceDAO;
