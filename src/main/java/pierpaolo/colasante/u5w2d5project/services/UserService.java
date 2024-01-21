@@ -46,6 +46,9 @@ public class UserService {
     }
     public void findByIdAndDelete(int id){
         User found = this.findById(id);
+        if(!found.getDevice().isEmpty()){
+            throw new BadRequestException("ATTENZIONE impossibile cancellare User di id: " + id + " è associato a uno o più dispositivi.");
+        }
         userDAO.delete(found);
     }
     public User uploadPicture(int id, MultipartFile file) throws IOException {
